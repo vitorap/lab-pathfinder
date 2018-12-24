@@ -1,0 +1,16 @@
+versao 1:
+	- gerar o labirinto e suas conexões através de um grafo
+	- encontrar a saida através de busca em largura e em profundidade (implementadas no grafo)
+
+versão 2:
+	-Da volta no vetor da fila de um jeito menos porco
+	-Adiciona o TAD de lista ordenada que ordena do menor peso para o maior, o que mantem os nós com menor FA no começo da lista
+	-Implementa busca A* no grafo utilizando o TAD acima e baseando-se na busca em largura
+	-Adiciona os campos posX e posY em cada nó para facilitar a localização do mesmo na matriz do labirinto, informação muito utilizada na busca A*
+
+versão 3:
+	-Corrige bug de conversão entre posição do ponteiro na matriz e posição do mesmo no vetor do grafo
+
+versao final:
+	-Acrescenta o salvamento do caminho encontrado peloa busca
+	-Acrescenta a impressão do labirinto com o caminho realizado pela uĺtima busca realizada no labirinto
