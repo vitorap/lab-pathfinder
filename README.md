@@ -1,96 +1,78 @@
-# lab-pathfinder
 
-1- Neste Problema, tenta-se determinar a rota entre a entrada e a saída de um labirinto que, com certeza, terá essa rota, como o da ilustração a baixo.
+# Lab-Pathfinder
 
-2Modelagem
-do problema
-O labirinto é representado através de um Grafo de Restrições , onde as
-variáveis são os nós que representam cada posição do labirinto e os arcos tem
-como restrição conectar dois nós que estejam nas posições Norte, Sul, Leste ou
-Oeste entre si no labirinto, assim como ilustrado na Figura 2.
-Figura 2
-3 Métodos
-de BUSCA:
-3.1 Não
-informada:
-Utilizase
-a busca em PROFUNDIDADE, uma vez que a árvore de
-busca do grafo que representa as conexões do labirinto será mais profunda
-que larga, fazendo com que este método seja mais eficiente quanto ao tempo
-de execução.
-3.2 Informada:
-Utilizase
-a busca A*, para que mesmo que não seja mais rápida,o
-menor caminho possível seja encontrado caso haja mais que um. Neste
-caso, cada aresta entre nós adjacentes possui uma distância com o valor de
-uma unidade, que é somado à distância em linha reta na função de avaliação
-da busca, seguindo a Fórmula I.
-ab D = √(Xa − Xb) (Y ) (Fórmula I)
-2 + a − Y b
-2
-4 Funcionamento
-geral do código:
-4.1 Estruturas
-principais
-O labirinto possui uma matriz de ponteiros para as posições de um
-grafo, o qual representa cada posição do labirinto e permite que sejam feitas
-conexões seguindo a modelagem de estados especificada de acordo com as
-posições deles na matriz do labirinto.
-O grafo é implementado utilizandose
-um vetor com todas as posições
-dele, sendo que em cada posição possui um pequeno vetor de quatro
-posições, cada uma possibilitando uma conexão na ordem Norte(0), Sul(1),
-Leste(2) e Oeste(3).
-4.2 Passos
-de execução
-Primeiramente, é gerado o labirinto sem nenhuma conexão, então as
-conexões são feitas a partir do nó de entrada com nós adjacentes que estão
-isolados e, tomandose
-esse novo nó como o de partida, continuase
-a
-geração de conexões até que haja pelo menos um caminho entre cada nó do
-grafo do labirinto, ou seja, até que o grafo se torne conexo.
-Então é feita a busca em profundidade no grafo pela saída a partir da
-entrada e depois a busca A* seguindo a maneira como ja foi explicada.
-5 Modo
-de compilação e execução do programa:
-Para compilar o programa, basta digitar o comando make no terminal a partir
-do diretório do trabalho, onde se encontra o makefile.
-Para execução, devese
-apenas digitar o comando make run a partir do
-mesmo diretório de compilação.
-Obs.: O compilador utilizado para testes foi o gcc versão 4.8.4 no sistema
-operacional Ubuntu versão 14.04.1.
-6 Entradas
-e saídas:
-Após a execução do programa, basta informar as duas dimensões do
-labirinto conforme são pedidas.
-A saída consistirseá
-em dois labirintos impressos com o caminho tomado
-pelas buscas indicados pelos caracteres ‘+’, um para cada busca realizada, além o
-tempo tomado para encontrar o dado caminho em cada busca.
-7 Experimentos
-Realizados:
-Comparação dos dois métodos de busca utilizado
-Tamanho do labirinto
-Tempo da busca em profundidade (s) x Tempo da busca A* (s)
-5x5 0.000003 0.000017
-5x5 0.000004 0.000015
-5x5 0.000003 0.000015
-5x5 0.000002 0.000013
-5x5 0.000003 0.000016
-10x10 0.000011 0.000016
-10x10 0.000010 0.000023
-10x10 0.000010 0.000019
-15x30 0.000048 0.000127
-15x30 0.000039 0.000080
-Média 0.000013 0.000034
-Tabela 1
+## Overview
+This project aims to find the route between the entry and exit points of a guaranteed-solvable maze.
 
-8Considerações
-Finais:
-Analisando os resultados obtidos, chegamos a conclusão de que a busca em
-profundidade obtém, na maioria das vezes, um caminho até a saída em um menor
-tempo. Em compensação, a busca A* obtém, apesar de em um tempo um pouco
-maior, um caminho mais curto caso haja mais que um possível, que é o menor
-caminho possível a ser percorrido no grafo.
+## Problem Modeling
+The maze is modeled as a Constraint Graph. Each node represents a maze position, and edges connect nodes that are adjacent in the North, South, East, or West directions.
+
+## Search Methods
+
+### Uninformed Search
+Depth-First Search (DFS) is employed as it is more time-efficient for deep trees, which is the case for the graph representing this maze.
+
+### Informed Search
+The A* algorithm is used to find the shortest possible path when multiple paths exist. Each edge between adjacent nodes has a distance value of one unit. The distance is computed using the formula:  
+\( D = \sqrt{(X_a - X_b)^2 + (Y_a - Y_b)^2} \)
+
+## Code Structure
+
+### Main Data Structures
+- The maze is represented as a matrix of pointers to graph nodes.
+- Each node contains a 4-element array representing connections in the North(0), South(1), East(2), and West(3) directions.
+
+### Execution Steps
+1. Initialize the maze without connections.
+2. Generate connections starting from the entry node.
+3. Continue until a path exists between all nodes, ensuring the graph is connected.
+4. Perform DFS and A* searches as described.
+
+## Compilation and Execution
+To compile, run `make` from the project directory.  
+To execute, run `make run` from the same directory.
+
+**Note**: The code was tested using GCC version 4.8.4 on Ubuntu 14.04.1.
+
+## I/O Specifications
+- Input: Specify the maze dimensions when prompted.
+- Output: Two mazes are printed with paths marked by '+'. Execution times for both searches are also displayed.
+
+## Experiments Conducted
+
+| Maze Size | DFS Time (s) | A* Time (s) |
+|-----------|--------------|-------------|
+| 5x5       | 0.000003     | 0.000017    |
+| 5x5       | 0.000004     | 0.000015    |
+| 5x5       | 0.000003     | 0.000015    |
+| 5x5       | 0.000002     | 0.000013    |
+| 5x5       | 0.000003     | 0.000016    |
+| 10x10     | 0.000011     | 0.000016    |
+| 10x10     | 0.000010     | 0.000023    |
+| 10x10     | 0.000010     | 0.000019    |
+| 15x30     | 0.000048     | 0.000127    |
+| 15x30     | 0.000039     | 0.000080    |
+| **Average** | 0.000013    | 0.000034    |
+
+
+## Conclusions
+DFS usually finds a path more quickly, while A* finds the shortest path when multiple paths exist, albeit at a slightly higher time cost.
+
+## Additional Instructions for Windows Compilation
+Instructions for Compilation on Windows
+To compile and run this project on a Windows environment, follow the steps below:
+
+Prerequisites
+Ensure the GCC compiler is installed, or install MinGW which includes GCC.
+Compilation Steps
+Open Command Prompt (CMD)
+
+Navigate to the project directory.
+Compile the Code
+
+gcc -o lab_pathfinder main.c [additional_files.c]
+Replace [additional_files.c] with any other .c files that need to be compiled, if applicable.
+
+Run the Program
+
+lab_pathfinder.exe

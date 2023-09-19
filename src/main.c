@@ -1,57 +1,82 @@
-/*
-
-	Vitor Albuquerque de Paula 			(8628220)
-*/
-
-
 #include <stdio.h>
-#include <time.h>
-#include <math.h>
+#include <stdlib.h>
+#include <sys/time.h>
 #include "../header/pilha.h"
 #include "../header/labirinto.h"
 
+double getTimeElapsed(struct timeval start, struct timeval end) {
+    return (double) (end.tv_sec - start.tv_sec) + (double) (end.tv_usec - start.tv_usec) / 1e6;
+}
+
 int main(void) {
-	int lin;
-	int col;
-	clock_t c1;
-	clock_t c2;
-	labirinto_t labrt;
+    int lin, col, iteracoes, modo;
+    struct timeval t1, t2;
+    double totalTimeDFS = 0, totalTimeAStar = 0;
 
-	/*=========================================================================================================
-		Pega as informações necessárias para gerar o labirinto
-	*/
-	printf("\e[1;1H\e[2J");
-	printf("#####Digite as informacoes pedidas para gerar um labirinto aleatoriamente e encontrar a saida por dois metodos de busca#####\n\n");
-	printf("Digite o numero de linhas do labirinto: ");
-	scanf("%d", &lin);
-	printf("\n");
-	printf("Digite o numero de colunas do labirinto: ");
-	scanf("%d", &col);
-	printf("\n");
-	//=========================================================================================================
+    printf("Escolha o modo de execução: \n");
+    printf("1. Modo Gráfico \n2. Modo Relatório \n");
+    scanf("%d", &modo);
 
-	labrt_init(&labrt, lin, col); //inicializa o labirinto com as dimensões entradas no programa
-	printf("\e[1;1H\e[2J");
-	printf("Tamanho do labirinto: labirinto[%d][%d]\n", lin, col);
-	printf("Entrada: no[%d][%d]\n", labrt.entrada->posX, labrt.entrada->posY); //Imprime qual é o nó de entrada
-	printf("Saida:   no[%d][%d]\n", labrt.saida->posX, labrt.saida->posY); //Imprime qual é o nó de saída
+    if (modo == 1) {
+        printf("Digite o numero de linhas do labirinto: ");
+        scanf("%d", &lin);
+        printf("\nDigite o numero de colunas do labirinto: ");
+        scanf("%d", &col);
+        printf("\n");
 
+        labirinto_t labrt;
+        labrt_init(&labrt, lin, col);
 
-	printf("---------- Busca em profundidade (Busca cega) ---------\n");
-	c1 = clock();
-	labrt_findSaida(&labrt, PROFUNDIDADE); //realiza busca cega em profundidade
-	c2 = clock();
-	labrt_print(&labrt); //Imprime labirinto
-	printf("Tempo tomado na busca: %lfs\n", ((double)c2 - c1)/CLOCKS_PER_SEC); //imprime tempo tomado pela pesquisa
+        gettimeofday(&t1, NULL);
+        labrt_findSaida(&labrt, PROFUNDIDADE);
+        gettimeofday(&t2, NULL);
 
+        labrt_print(&labrt);
+        printf("Tempo tomado na busca DFS: %lfs\n", getTimeElapsed(t1, t2));
 
-	printf("-------------- Busca A* (Busca informada) -------------\n");
-	c1 = clock();
-	labrt_findSaida(&labrt, INFORMADA); //realiza busca informada (busca A*)
-	c2 = clock();
-	labrt_print(&labrt); //Imprime o labirinto
-	printf("Tempo tomado na busca: %lfs\n", ((double)c2 - c1)/CLOCKS_PER_SEC); //imprime o tempo tomado pela pesquisa
+        gettimeofday(&t1, NULL);
+        labrt_findSaida(&labrt, INFORMADA);
+        gettimeofday(&t2, NULL);
 
-	labrt_destroy(&labrt); //libera a memória alocada para aa pesquisa
-	return 0;
+        labrt_print(&labrt);
+        printf("Tempo tomado na busca A*: %lfs\n", getTimeElapsed(t1, t2));
+
+        labrt_destroy(&labrt);
+
+    } else if (modo == 2) {
+        printf("Digite o número de iterações para o relatório: ");
+        scanf("%d", &iteracoes);
+        printf("\nDigite o tamanho N do labirinto (N x N): ");
+        scanf("%d", &lin);
+        col = lin; // Labirinto será quadrado
+
+        printf("\n| Iteração | Tempo da DFS (s) | Tempo A* (s) |\n");
+        printf("|----------|------------------|--------------|\n");
+
+        for (int i = 0; i < iteracoes; ++i) {
+            labirinto_t labrt;
+            labrt_init(&labrt, lin, col);
+
+            gettimeofday(&t1, NULL);
+            labrt_findSaida(&labrt, PROFUNDIDADE);
+            gettimeofday(&t2, NULL);
+            double timeDFS = getTimeElapsed(t1, t2);
+            totalTimeDFS += timeDFS;
+
+            gettimeofday(&t1, NULL);
+            labrt_findSaida(&labrt, INFORMADA);
+            gettimeofday(&t2, NULL);
+            double timeAStar = getTimeElapsed(t1, t2);
+            totalTimeAStar += timeAStar;
+
+            printf("| %8d | %16.6lf | %12.6lf |\n", i+1, timeDFS, timeAStar);
+
+            labrt_destroy(&labrt);
+        }
+
+        printf("\nTempo médio na busca DFS: %lfs\n", totalTimeDFS / iteracoes);
+        printf("Tempo médio na busca A*: %lfs\n", totalTimeAStar / iteracoes);
+    }
+
+    return 0;
 }
