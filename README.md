@@ -68,11 +68,8 @@ Compilation Steps
 Open Command Prompt (CMD)
 
 Navigate to the project directory.
-Compile the Code
-
-gcc -o lab_pathfinder main.c [additional_files.c]
-Replace [additional_files.c] with any other .c files that need to be compiled, if applicable.
+  Compile the Code
+    gcc -o lab_pathfinder src/main.c src/fila.c src/global.c src/grafo.c src/labirinto.c src/listaOrd.c src/pilha.c -Iheader
 
 Run the Program
-
-lab_pathfinder.exe
+  ./lab_pathfinder.exe
